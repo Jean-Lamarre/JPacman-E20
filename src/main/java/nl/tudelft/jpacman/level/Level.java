@@ -263,7 +263,7 @@ public class Level {
         if (currentStatus == Status.IN_PROGRESS)
             return;
 
-        statusUpdateObservers(currentStatus);
+        UpdateObservers(currentStatus);
     }
 
     private Status GetStatus() {
@@ -274,7 +274,7 @@ public class Level {
         return Status.IN_PROGRESS;
     }
 
-    private void statusUpdateObservers(Status levelStatus) {
+    private void UpdateObservers(Status levelStatus) {
         for (LevelObserver observer : observers) {
             observer.update(levelStatus);
         }
