@@ -15,6 +15,8 @@ import nl.tudelft.jpacman.board.Board;
 import nl.tudelft.jpacman.board.Direction;
 import nl.tudelft.jpacman.board.Square;
 import nl.tudelft.jpacman.board.Unit;
+import nl.tudelft.jpacman.exception.PacmanConfigurationEmptyException;
+import nl.tudelft.jpacman.exception.PacmanLevelException;
 import nl.tudelft.jpacman.npc.Ghost;
 
 /**
@@ -92,9 +94,12 @@ public class Level {
      */
     public Level(Board board, List<Ghost> ghosts, List<Square> startPositions,
                  CollisionMap collisionMap) {
-        assert board != null;
-        assert ghosts != null;
-        assert startPositions != null;
+        if(board == null)
+            throw new PacmanLevelException("Board is null");
+        if(ghosts == null)
+            throw new PacmanLevelException("Ghosts list is null");
+        if(startPositions == null)
+            throw new PacmanLevelException("startPositions list is null");
 
         this.board = board;
         this.inProgress = false;
@@ -135,8 +140,10 @@ public class Level {
      * @param player The player to register.
      */
     public void registerPlayer(Player player) {
-        assert player != null;
-        assert !startSquares.isEmpty();
+        if(player == null)
+            throw new PacmanLevelException("player is null");
+        if(startSquares.isEmpty())
+            throw new PacmanLevelException("Starting squares is empty.");
 
         if (players.contains(player)) {
             return;
@@ -165,9 +172,12 @@ public class Level {
      * @param direction The direction to move the unit in.
      */
     public void move(Unit unit, Direction direction) {
-        assert unit != null;
-        assert direction != null;
-        assert unit.hasSquare();
+        if(unit == null)
+            throw new PacmanLevelException("unit to move is null");
+        if(direction == null)
+            throw new PacmanLevelException("direction to move is null");
+        if(!unit.hasSquare())
+            throw new PacmanLevelException("unit to move square is null.");
 
         if (!isInProgress()) {
             return;
@@ -302,11 +312,11 @@ public class Level {
      * @return The amount of pellets remaining on the board.
      */
     public int remainingPellets() {
-        Board board = getBoard();
+        Board boardCopy = getBoard();
         int pellets = 0;
-        for (int x = 0; x < board.getWidth(); x++) {
-            for (int y = 0; y < board.getHeight(); y++) {
-                for (Unit unit : board.squareAt(x, y).getOccupants()) {
+        for (int x = 0; x < boardCopy.getWidth(); x++) {
+            for (int y = 0; y < boardCopy.getHeight(); y++) {
+                for (Unit unit : boardCopy.squareAt(x, y).getOccupants()) {
                     if (unit instanceof Pellet) {
                         pellets++;
                     }

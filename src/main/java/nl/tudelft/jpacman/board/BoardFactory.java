@@ -1,5 +1,6 @@
 package nl.tudelft.jpacman.board;
 
+import nl.tudelft.jpacman.exception.PacmanBoardException;
 import nl.tudelft.jpacman.sprite.PacManSprites;
 import nl.tudelft.jpacman.sprite.Sprite;
 
@@ -36,7 +37,8 @@ public class BoardFactory {
      * @return A new board, wrapping a grid of connected cells.
      */
     public Board createBoard(Square[][] grid) {
-        assert grid != null;
+        if(grid == null)
+            throw new PacmanBoardException("Square[][] grid is null.");
 
         Board board = new Board(grid);
 

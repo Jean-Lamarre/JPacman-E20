@@ -1,9 +1,6 @@
 package nl.tudelft.jpacman.npc.ghost;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import nl.tudelft.jpacman.board.Board;
 import nl.tudelft.jpacman.board.Direction;
@@ -54,7 +51,7 @@ public final class Navigation {
             visited.add(square);
             addNewTargets(traveller, targets, visited, node, square);
         }
-        return null;
+        return Collections.emptyList();
     }
 
     private static void addNewTargets(Unit traveller, List<Node> targets,
@@ -89,7 +86,7 @@ public final class Navigation {
 
     private static Unit VisitOtherDirections(Class<? extends Unit> type, List<Square> toDo, Set<Square> visited) {
 
-        if(toDo.isEmpty())
+        if (toDo.isEmpty())
             return null;
 
         Square square = toDo.remove(0);
@@ -104,7 +101,7 @@ public final class Navigation {
         return VisitOtherDirections(type, toDo, visited);
     }
 
-    private static void LookForOtherDirections(Square oldTarget, List<Square> toDo, Set<Square> visited){
+    private static void LookForOtherDirections(Square oldTarget, List<Square> toDo, Set<Square> visited) {
         visited.add(oldTarget);
         for (Direction direction : Direction.values()) {
             AddTargetIfNew(oldTarget.getSquareAt(direction), toDo, visited);
