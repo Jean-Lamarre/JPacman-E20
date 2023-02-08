@@ -21,7 +21,7 @@ import nl.tudelft.jpacman.npc.Ghost;
  * A level of Pac-Man. A level consists of the board with the players and the
  * AIs on it.
  *
- * @author Jeroen Roosen 
+ * @author Jeroen Roosen
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public class Level {
@@ -53,6 +53,10 @@ public class Level {
      */
     private boolean inProgress;
 
+    public enum Status {
+        IN_PROGRESS, WON, LOSE
+    }
+
     /**
      * The squares from which players can start this game.
      */
@@ -81,14 +85,10 @@ public class Level {
     /**
      * Creates a new level for the board.
      *
-     * @param board
-     *            The board for the level.
-     * @param ghosts
-     *            The ghosts on the board.
-     * @param startPositions
-     *            The squares on which players start on this board.
-     * @param collisionMap
-     *            The collection of collisions that should be handled.
+     * @param board          The board for the level.
+     * @param ghosts         The ghosts on the board.
+     * @param startPositions The squares on which players start on this board.
+     * @param collisionMap   The collection of collisions that should be handled.
      */
     public Level(Board board, List<Ghost> ghosts, List<Square> startPositions,
                  CollisionMap collisionMap) {
@@ -112,8 +112,7 @@ public class Level {
     /**
      * Adds an observer that will be notified when the level is won or lost.
      *
-     * @param observer
-     *            The observer that will be notified.
+     * @param observer The observer that will be notified.
      */
     public void addObserver(LevelObserver observer) {
         observers.add(observer);
@@ -122,8 +121,7 @@ public class Level {
     /**
      * Removes an observer if it was listed.
      *
-     * @param observer
-     *            The observer to be removed.
+     * @param observer The observer to be removed.
      */
     public void removeObserver(LevelObserver observer) {
         observers.remove(observer);
@@ -134,8 +132,7 @@ public class Level {
      * player can only be registered once, registering a player again will have
      * no effect.
      *
-     * @param player
-     *            The player to register.
+     * @param player The player to register.
      */
     public void registerPlayer(Player player) {
         assert player != null;
@@ -164,10 +161,8 @@ public class Level {
      * Moves the unit into the given direction if possible and handles all
      * collisions.
      *
-     * @param unit
-     *            The unit to move.
-     * @param direction
-     *            The direction to move the unit in.
+     * @param unit      The unit to move.
+     * @param direction The direction to move the unit in.
      */
     public void move(Unit unit, Direction direction) {
         assert unit != null;
@@ -263,15 +258,25 @@ public class Level {
      * Updates the observers about the state of this level.
      */
     private void updateObservers() {
-        if (!isAnyPlayerAlive()) {
-            for (LevelObserver observer : observers) {
-                observer.levelLost();
-            }
-        }
-        if (remainingPellets() == 0) {
-            for (LevelObserver observer : observers) {
-                observer.levelWon();
-            }
+        Status currentStatus = GetStatus();
+
+        if (currentStatus == Status.IN_PROGRESS)
+            return;
+
+        statusUpdateObservers(currentStatus);
+    }
+
+    private Status GetStatus() {
+        if (!isAnyPlayerAlive())
+            return Status.LOSE;
+        if (remainingPellets() == 0)
+            return Status.WON;
+        return Status.IN_PROGRESS;
+    }
+
+    private void statusUpdateObservers(Status levelStatus) {
+        for (LevelObserver observer : observers) {
+            observer.update(levelStatus);
         }
     }
 
@@ -280,7 +285,7 @@ public class Level {
      * is alive.
      *
      * @return <code>true</code> if at least one of the registered players is
-     *         alive.
+     * alive.
      */
     public boolean isAnyPlayerAlive() {
         for (Player player : players) {
@@ -332,10 +337,8 @@ public class Level {
         /**
          * Creates a new task.
          *
-         * @param service
-         *            The service that executes the task.
-         * @param npc
-         *            The NPC to move.
+         * @param service The service that executes the task.
+         * @param npc     The NPC to move.
          */
         NpcMoveTask(ScheduledExecutorService service, Ghost npc) {
             this.service = service;
@@ -353,6 +356,7 @@ public class Level {
         }
     }
 
+
     /**
      * An observer that will be notified when the level is won or lost.
      *
@@ -361,15 +365,10 @@ public class Level {
     public interface LevelObserver {
 
         /**
-         * The level has been won. Typically the level should be stopped when
+         * The level has been end (WIN or LOSE). Typically the level should be stopped when
          * this event is received.
          */
-        void levelWon();
+        void update(Status status);
 
-        /**
-         * The level has been lost. Typically the level should be stopped when
-         * this event is received.
-         */
-        void levelLost();
     }
 }
