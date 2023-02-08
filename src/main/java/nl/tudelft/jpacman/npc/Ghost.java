@@ -77,7 +77,7 @@ public abstract class Ghost extends Unit {
     public long getInterval() {
         return this.moveInterval + Randomizer.nextInt(this.intervalVariation);
     }
-    
+
     /**
      * Determines a possible move in a random direction.
      *
