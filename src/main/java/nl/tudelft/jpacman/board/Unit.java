@@ -1,5 +1,6 @@
 package nl.tudelft.jpacman.board;
 
+import nl.tudelft.jpacman.exception.PacmanBoardException;
 import nl.tudelft.jpacman.sprite.Sprite;
 
 /**
@@ -71,7 +72,9 @@ public abstract class Unit {
      *            The square to occupy.
      */
     public void occupy(Square target) {
-        assert target != null;
+
+        if(target == null)
+            throw new PacmanBoardException("Square target is null");
 
         if (square != null) {
             square.remove(this);

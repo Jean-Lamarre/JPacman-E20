@@ -1,6 +1,8 @@
 package nl.tudelft.jpacman.board;
 
 
+import nl.tudelft.jpacman.exception.PacmanBoardException;
+
 /**
  * A top-down view of a matrix of {@link Square}s.
  *
@@ -11,7 +13,7 @@ public class Board {
     /**
      * The grid of squares with board[x][y] being the square at column x, row y.
      */
-    private final Square[][] board;
+    private final Square[][] boardSquares;
 
     /**
      * Creates a new board.
@@ -23,7 +25,7 @@ public class Board {
     @SuppressWarnings("PMD.ArrayIsStoredDirectly")
     Board(Square[][] grid) {
         assert grid != null;
-        this.board = grid;
+        this.boardSquares = grid;
         assert invariant() : "Initial grid cannot contain null squares";
     }
 
@@ -32,7 +34,7 @@ public class Board {
      * @return false if any square on the board is null.
      */
     protected final boolean invariant() {
-        for (Square[] row : board) {
+        for (Square[] row : boardSquares) {
             for (Square square : row) {
                 if (square == null) {
                     return false;
@@ -48,7 +50,7 @@ public class Board {
      * @return The width of this board.
      */
     public int getWidth() {
-        return board.length;
+        return boardSquares.length;
     }
 
     /**
@@ -57,7 +59,7 @@ public class Board {
      * @return The height of this board.
      */
     public int getHeight() {
-        return board[0].length;
+        return boardSquares[0].length;
     }
 
     /**
@@ -73,8 +75,10 @@ public class Board {
      * @return The square at the given <code>x,y</code> position (never null).
      */
     public Square squareAt(int x, int y) {
-        assert withinBorders(x, y);
-        Square result = board[x][y];
+        if(!withinBorders(x,y))
+            throw new PacmanBoardException("Value not within boarder");
+
+        Square result = boardSquares[x][y];
         assert result != null : "Follows from invariant.";
         return result;
     }
