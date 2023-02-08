@@ -89,6 +89,9 @@ public final class Navigation {
 
     private static Unit VisitOtherDirections(Class<? extends Unit> type, List<Square> toDo, Set<Square> visited) {
 
+        if(toDo.isEmpty())
+            return null;
+
         Square square = toDo.remove(0);
 
         Unit unit = findUnit(type, square);
