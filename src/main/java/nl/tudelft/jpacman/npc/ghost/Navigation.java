@@ -13,7 +13,7 @@ import nl.tudelft.jpacman.board.Unit;
 /**
  * Navigation provides utility to navigate on {@link Square}s.
  *
- * @author Jeroen Roosen 
+ * @author Jeroen Roosen
  */
 public final class Navigation {
 
@@ -26,21 +26,18 @@ public final class Navigation {
      * shortest path to the square regardless of terrain if no traveller is
      * specified.
      *
-     * @param from
-     *            The starting square.
-     * @param to
-     *            The destination.
-     * @param traveller
-     *            The traveller attempting to reach the destination. If
-     *            traveller is set to <code>null</code>, this method will ignore
-     *            terrain and find the shortest path whether it can actually be
-     *            reached or not.
+     * @param from      The starting square.
+     * @param to        The destination.
+     * @param traveller The traveller attempting to reach the destination. If
+     *                  traveller is set to <code>null</code>, this method will ignore
+     *                  terrain and find the shortest path whether it can actually be
+     *                  reached or not.
      * @return The shortest path to the destination or <code>null</code> if no
-     *         such path could be found. When the destination is the current
-     *         square, an empty list is returned.
+     * such path could be found. When the destination is the current
+     * square, an empty list is returned.
      */
     public static List<Direction> shortestPath(Square from, Square to,
-                                                         Unit traveller) {
+                                               Unit traveller) {
         if (from.equals(to)) {
             return new ArrayList<>();
         }
@@ -76,46 +73,66 @@ public final class Navigation {
      * method will perform a breadth first search starting from the given
      * square.
      *
-     * @param type
-     *            The type of unit to search for.
-     * @param currentLocation
-     *            The starting location for the search.
+     * @param type            The type of unit to search for.
+     * @param currentLocation The starting location for the search.
      * @return The nearest unit of the given type, or <code>null</code> if no
-     *         such unit could be found.
+     * such unit could be found.
      */
-    public static Unit findNearest(Class<? extends Unit> type,
-                                             Square currentLocation) {
+    public static Unit findNearest(Class<? extends Unit> type, Square currentLocation) {
         List<Square> toDo = new ArrayList<>();
         Set<Square> visited = new HashSet<>();
 
         toDo.add(currentLocation);
 
-        while (!toDo.isEmpty()) {
-            Square square = toDo.remove(0);
-            Unit unit = findUnit(type, square);
-            if (unit != null) {
-                assert unit.hasSquare();
-                return unit;
-            }
-            visited.add(square);
-            for (Direction direction : Direction.values()) {
-                Square newTarget = square.getSquareAt(direction);
-                if (!visited.contains(newTarget) && !toDo.contains(newTarget)) {
-                    toDo.add(newTarget);
-                }
-            }
-        }
-        return null;
+        return VisitOtherDirections(type, toDo, visited);
     }
 
+    private static Unit VisitOtherDirections(Class<? extends Unit> type, List<Square> toDo, Set<Square> visited) {
+
+        if(toDo.isEmpty())
+            return null;
+
+        Square square = toDo.remove(0);
+
+        Unit unit = findUnit(type, square);
+        if (IsSquareValidNearest(unit)) {
+            return unit;
+        }
+
+        LookForOtherDirections(square, toDo, visited);
+
+        return VisitOtherDirections(type, toDo, visited);
+    }
+
+    private static void LookForOtherDirections(Square oldTarget, List<Square> toDo, Set<Square> visited){
+        visited.add(oldTarget);
+        for (Direction direction : Direction.values()) {
+            AddTargetIfNew(oldTarget.getSquareAt(direction), toDo, visited);
+        }
+    }
+
+    private static void AddTargetIfNew(Square target, List<Square> toDo, Set<Square> visited) {
+        if (!visited.contains(target) && !toDo.contains(target)) {
+            toDo.add(target);
+        }
+    }
+
+    private static boolean IsSquareValidNearest(Unit unit) {
+        if (unit != null) {
+            assert unit.hasSquare();
+            return true;
+        }
+        return false;
+    }
+
+
     /**
-     *  Finds a subtype of Unit in a level.
-     *  This method is very useful for finding the ghosts in the parsed map.
+     * Finds a subtype of Unit in a level.
+     * This method is very useful for finding the ghosts in the parsed map.
      *
      * @param clazz the type to search for.
      * @param board the board to find the unit in.
-     * @param <T> the return type, same as the type in clazz.
-     *
+     * @param <T>   the return type, same as the type in clazz.
      * @return the first unit found of type clazz, or null.
      */
     public static <T extends Unit> T findUnitInBoard(Class<T> clazz, Board board) {
@@ -134,15 +151,11 @@ public final class Navigation {
     /**
      * Determines whether a square has an occupant of a certain type.
      *
-     * @param type
-     *            The type to search for.
-     * @param square
-     *            The square to search.
-     * @param <T>
-     *           the type of unit we searched for.
-     *
+     * @param type   The type to search for.
+     * @param square The square to search.
+     * @param <T>    the type of unit we searched for.
      * @return A unit of type T, iff such a unit occupies this square, or
-     *         <code>null</code> of none does.
+     * <code>null</code> of none does.
      */
     @SuppressWarnings("unchecked")
     public static <T extends Unit> T findUnit(Class<T> type, Square square) {
@@ -181,14 +194,11 @@ public final class Navigation {
         /**
          * Creates a new node.
          *
-         * @param direction
-         *            The direction, which is <code>null</code> for the root
-         *            node.
-         * @param square
-         *            The square.
-         * @param parent
-         *            The parent node, which is <code>null</code> for the root
-         *            node.
+         * @param direction The direction, which is <code>null</code> for the root
+         *                  node.
+         * @param square    The square.
+         * @param parent    The parent node, which is <code>null</code> for the root
+         *                  node.
          */
         Node(Direction direction, Square square, Node parent) {
             this.direction = direction;
@@ -198,7 +208,7 @@ public final class Navigation {
 
         /**
          * @return The direction for this node, or <code>null</code> if this
-         *         node is a root node.
+         * node is a root node.
          */
         private Direction getDirection() {
             return direction;
@@ -213,7 +223,7 @@ public final class Navigation {
 
         /**
          * @return The parent node, or <code>null</code> if this node is a root
-         *         node.
+         * node.
          */
         private Node getParent() {
             return parent;

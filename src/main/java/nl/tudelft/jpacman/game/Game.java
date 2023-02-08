@@ -105,12 +105,10 @@ public abstract class Game implements LevelObserver {
     }
 
     @Override
-    public void levelWon() {
-        stop();
-    }
-
-    @Override
-    public void levelLost() {
-        stop();
+    public void update(Level.Status status){
+        if(status == Level.Status.WON)
+            stop();
+        else
+            stop();
     }
 }

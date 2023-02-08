@@ -6,6 +6,7 @@ import nl.tudelft.jpacman.board.Unit;
 import nl.tudelft.jpacman.level.Player;
 import nl.tudelft.jpacman.npc.Ghost;
 import nl.tudelft.jpacman.sprite.Sprite;
+import nl.tudelft.jpacman.util.Randomizer;
 
 import java.util.*;
 
@@ -127,7 +128,7 @@ public class Clyde extends Ghost {
         if (directions.isEmpty()) {
             return null;
         }
-        int i = new Random().nextInt(directions.size());
+        int i = Randomizer.nextInt(directions.size());
         return directions.get(i);
     }
 }

@@ -4,6 +4,7 @@ import nl.tudelft.jpacman.Launcher;
 import nl.tudelft.jpacman.board.Direction;
 import nl.tudelft.jpacman.game.Game;
 import nl.tudelft.jpacman.level.Player;
+import nl.tudelft.jpacman.util.Randomizer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -106,7 +107,7 @@ class JPacmanFuzzer {
     }
 
     private Direction getRandomDirection() {
-        return Direction.values()[new Random().nextInt(Direction.values().length)];
+        return Direction.values()[Randomizer.nextInt(Direction.values().length)];
     }
 
     private void log(BufferedWriter logWriter, Direction chosen) throws IOException {

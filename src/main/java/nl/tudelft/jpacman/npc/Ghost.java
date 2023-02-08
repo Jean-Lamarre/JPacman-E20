@@ -3,6 +3,7 @@ package nl.tudelft.jpacman.npc;
 import nl.tudelft.jpacman.board.Direction;
 import nl.tudelft.jpacman.board.Unit;
 import nl.tudelft.jpacman.sprite.Sprite;
+import nl.tudelft.jpacman.util.Randomizer;
 
 import java.util.Map;
 import java.util.Optional;
@@ -74,7 +75,7 @@ public abstract class Ghost extends Unit {
      * @return The suggested delay between moves in milliseconds.
      */
     public long getInterval() {
-        return this.moveInterval + new Random().nextInt(this.intervalVariation);
+        return this.moveInterval + Randomizer.nextInt(this.intervalVariation);
     }
 
 
@@ -104,7 +105,7 @@ public abstract class Ghost extends Unit {
         if (directions.isEmpty()) {
             return null;
         }
-        int i = new Random().nextInt(directions.size());
+        int i = Randomizer.nextInt(directions.size());
         return directions.get(i);
     }*/
 }

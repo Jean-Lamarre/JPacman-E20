@@ -2,6 +2,7 @@ package nl.tudelft.jpacman;
 
 import nl.tudelft.jpacman.board.BoardFactory;
 import nl.tudelft.jpacman.board.Direction;
+import nl.tudelft.jpacman.exception.PacmanConfigurationException;
 import nl.tudelft.jpacman.game.Game;
 import nl.tudelft.jpacman.game.GameFactory;
 import nl.tudelft.jpacman.level.*;

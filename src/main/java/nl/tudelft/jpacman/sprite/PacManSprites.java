@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import nl.tudelft.jpacman.PacmanConfigurationException;
+import nl.tudelft.jpacman.exception.PacmanConfigurationException;
 import nl.tudelft.jpacman.board.Direction;
 import nl.tudelft.jpacman.npc.ghost.GhostColor;
 
