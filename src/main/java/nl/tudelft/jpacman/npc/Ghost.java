@@ -77,35 +77,13 @@ public abstract class Ghost extends Unit {
     public long getInterval() {
         return this.moveInterval + Randomizer.nextInt(this.intervalVariation);
     }
-
-
-
+    
     /**
      * Determines a possible move in a random direction.
      *
      * @return A direction in which the ghost can move, or <code>null</code> if
      * the ghost is shut in by inaccessible squares.
      */
-     protected abstract Direction randomMove();
+    protected abstract Direction randomMove();
 
-    /**
-     * Determines a possible move in a random direction.
-     *
-     * @return A direction in which the ghost can move, or <code>null</code> if
-     * the ghost is shut in by inaccessible squares.
-     */
-    /*protected Direction randomMove() {
-        Square square = getSquare();
-        List<Direction> directions = new ArrayList<>();
-        for (Direction direction : Direction.values()) {
-            if (square.getSquareAt(direction).isAccessibleTo(this)) {
-                directions.add(direction);
-            }
-        }
-        if (directions.isEmpty()) {
-            return null;
-        }
-        int i = Randomizer.nextInt(directions.size());
-        return directions.get(i);
-    }*/
 }
