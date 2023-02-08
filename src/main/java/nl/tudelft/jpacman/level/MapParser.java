@@ -175,7 +175,6 @@ public class MapParser {
      */
     private void checkMapFormat(List<String> text) {
         checkMapTextFormat(text);
-
         checkMapLinesFormat(text);
     }
 
