@@ -58,10 +58,13 @@ public class CollisionInteractionMap implements CollisionMap {
     public <C1 extends Unit, C2 extends Unit> void onCollision(
         Class<C1> collider, Class<C2> collidee, boolean symetric,
         CollisionHandler<C1, C2> handler) {
+
         addHandler(collider, collidee, handler);
+
         if (symetric) {
             addHandler(collidee, collider, new InverseCollisionHandler<>(handler));
         }
+
     }
 
     /**
@@ -71,11 +74,9 @@ public class CollisionInteractionMap implements CollisionMap {
      * @param collidee The collidee type.
      * @param handler  The handler that handles the collision.
      */
-    private void addHandler(Class<? extends Unit> collider,
-                            Class<? extends Unit> collidee, CollisionHandler<?, ?> handler) {
-        if (!handlers.containsKey(collider)) {
-            handlers.put(collider, new HashMap<>());
-        }
+    private void addHandler(Class<? extends Unit> collider, Class<? extends Unit> collidee, CollisionHandler<?, ?> handler) {
+
+        handlers.computeIfAbsent(collider, c -> new HashMap<>());
 
         Map<Class<? extends Unit>, CollisionHandler<?, ?>> map = handlers.get(collider);
         map.put(collidee, handler);
@@ -141,7 +142,7 @@ public class CollisionInteractionMap implements CollisionMap {
      */
     @SuppressWarnings("unchecked")
     private List<Class<? extends Unit>> getInheritance(Class<? extends Unit> clazz) {
-        
+
         List<Class<? extends Unit>> found = new ArrayList<>();
         found.add(clazz);
 
