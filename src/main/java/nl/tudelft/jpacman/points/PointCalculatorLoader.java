@@ -26,7 +26,7 @@ public class PointCalculatorLoader {
                 clazz = loadClassFromFile();
             }
 
-            return (PointCalculator) clazz.newInstance();
+            return (PointCalculator) clazz.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new PacmanPointCalculatorLoaderException("Could not dynamically load the points calculator.", e);
         }

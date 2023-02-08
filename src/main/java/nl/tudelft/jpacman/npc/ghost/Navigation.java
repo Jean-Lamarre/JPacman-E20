@@ -86,7 +86,7 @@ public final class Navigation {
 
     private static Unit VisitOtherDirections(Class<? extends Unit> type, List<Square> toDo, Set<Square> visited) {
 
-        if(toDo.isEmpty())
+        if (toDo.isEmpty())
             return null;
 
         Square square = toDo.remove(0);
@@ -101,7 +101,7 @@ public final class Navigation {
         return VisitOtherDirections(type, toDo, visited);
     }
 
-    private static void LookForOtherDirections(Square oldTarget, List<Square> toDo, Set<Square> visited){
+    private static void LookForOtherDirections(Square oldTarget, List<Square> toDo, Set<Square> visited) {
         visited.add(oldTarget);
         for (Direction direction : Direction.values()) {
             AddTargetIfNew(oldTarget.getSquareAt(direction), toDo, visited);
